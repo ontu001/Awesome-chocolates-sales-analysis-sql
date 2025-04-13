@@ -77,3 +77,8 @@ from
 	sales;
 
 
+-- Find the starting and ending date of sales
+select
+    max(saledate) as Starting_date, min(saledate) as End_date
+from
+    sales;
