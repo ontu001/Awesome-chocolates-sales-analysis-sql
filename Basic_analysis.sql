@@ -82,3 +82,86 @@ select
     max(saledate) as Starting_date, min(saledate) as End_date
 from
     sales;
+
+
+
+
+
+
+
+
+
+-- Find the sales data where maximum 50 boxse are sold
+select
+	*
+from
+	sales
+where
+	boxes>0 and boxes<=50
+	
+
+-- Find the total number of sales data where maximum 50 boxse are sold
+
+select
+	count(*) as total_sales
+from
+	sales
+where
+	boxes between 0 and 50;
+
+
+
+
+
+--Find how many countries are there  under every region.
+select
+	region , count(geo) as total_country
+from 
+	geo
+group by 1
+order by total_country desc;
+
+
+
+
+
+
+-- Find the selling amount per box
+select
+	spid, amount/boxes as sell_amount_per_box
+from sales
+	where boxes>0;
+
+
+
+
+
+-- Find the 10 highest amount of selling data
+select * from sales where amount >10000 order by amount desc;
+
+
+-- Find top 10 selling amount's sales data
+select * from sales order by amount desc limit 10;
+
+
+
+-- Find the country name along with their total selling amount
+select
+	geo, sum(amount) as total_amount
+from
+	sales
+inner join
+	geo on sales.geoid = geo.geoid
+group by
+	geo
+order by
+	total_amount desc;
+
+
+
+
+
+
+
+
+
