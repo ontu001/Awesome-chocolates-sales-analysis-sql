@@ -164,4 +164,38 @@ order by
 
 
 
+-- Find how many salesperson are working on each country
+select
+	geo, count(people.spid) as total_salesperson
+from
+	sales
+inner join geo on geo.geoid = sales.geoid
+inner join people on people.spid = sales.spid
+group by 1
+order by
+	total_salesperson desc;
 
+
+
+
+--Categories the total amout of sale into 4 group
+/*
+less than 1000
+1000 to 3000
+3000 to 5000
+more than 5000
+
+*/
+
+select
+	case
+		when amount < 1000 then 'Less than 1000'
+        when amount between 1000 and 3000 then '1000 to 3000'
+        when amount between 3000 and 5000 then '3000 to 5000'
+        else 'More than 5000'
+    end as amount_category,
+	count(*) as total_sales
+from
+	sales
+group by 1
+order by total_sales desc;
