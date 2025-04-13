@@ -69,3 +69,11 @@ where
 
 
 
+
+-- find the total sales amoun
+select
+	sum(amount) as total_sales_amount
+from
+	sales;
+
+
