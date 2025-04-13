@@ -5,7 +5,15 @@ select * from products;
 select * from sales;
 
 
+
+
+
 -- Find those salesperson who is not assigned to any team.
+SELECT column_name, data_type 
+FROM information_schema.columns 
+WHERE table_name = 'people';
+
+
 
 
 
@@ -67,9 +75,6 @@ where
 
 
 
-
-
-
 -- find the total sales amoun
 select
 	sum(amount) as total_sales_amount
@@ -77,15 +82,12 @@ from
 	sales;
 
 
+
 -- Find the starting and ending date of sales
 select
-    max(saledate) as Starting_date, min(saledate) as End_date
+     min(saledate) as Start_date, max(saledate) as End_date
 from
     sales;
-
-
-
-
 
 
 
@@ -160,10 +162,6 @@ order by
 
 
 
-
-
-
-
 -- Find how many salesperson are working on each country
 select
 	geo, count(people.spid) as total_salesperson
@@ -187,6 +185,8 @@ more than 5000
 
 */
 
+
+
 select
 	case
 		when amount < 1000 then 'Less than 1000'
@@ -198,4 +198,87 @@ select
 from
 	sales
 group by 1
+order by total_sales;
+
+
+
+
+
+
+
+--Categories the total amout of sale into 4 group by geo location
+/*
+less than 1000
+1000 to 3000
+3000 to 5000
+more than 5000
+
+*/
+
+
+-- solution 1
+
+
+select
+	case
+		when amount < 1000 then 'Less than 1000'
+        when amount between 1000 and 3000 then '1000 to 3000'
+        when amount between 3000 and 5000 then '3000 to 5000'
+        else 'More than 5000'
+    end as amount_category,
+	geo,
+	count(*) as total_sales	
+from
+	sales
+inner join geo on sales.geoid = geo.geoid
+group by 1,2
 order by total_sales desc;
+
+
+
+
+
+--solution 2
+
+SELECT
+geo,
+    COUNT(CASE WHEN amount < 1000 THEN 1 END) AS "Less than 1000",
+    COUNT(CASE WHEN amount BETWEEN 1000 AND 3000 THEN 1 END) AS "1000 to 3000",
+    COUNT(CASE WHEN amount BETWEEN 3000 AND 5000 THEN 1 END) AS "3000 to 5000",
+    COUNT(CASE WHEN amount > 5000 THEN 1 END) AS "More than 5000"
+FROM sales
+inner join geo on sales.geoid = geo.geoid
+group by geo
+;
+
+
+
+
+
+
+
+
+--Find top sales amount by month of 2021
+select
+	extract(month from saledate) as month_ , sum(amount) as total_sales
+from
+	sales
+where
+	extract(year from saledate) = 2021
+group by 1
+order by 2 desc;
+
+
+
+
+
+
+
+-- Find out the unique date for 2021
+SELECT DISTINCT
+    EXTRACT(MONTH FROM saledate) AS month_of_2021
+FROM
+    sales
+WHERE
+    EXTRACT(YEAR FROM saledate) = 2021
+ORDER BY month_of_2021;
